@@ -54,6 +54,16 @@ class RouterNavigation {
           pageBuilder: (context, animation, secondaryAnimation) => const DashboardScreen(),
           transitionsBuilder: bottomToTop,
         );
+      case stockOpnameScreen:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const StockOpnameScreen(),
+          transitionsBuilder: rightToLeft,
+        );
+      case insertStockOpnameScreen:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const InsertStockOpnameScreen(),
+          transitionsBuilder: bottomToTop,
+        );
       default:
         return null;
     }

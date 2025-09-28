@@ -44,7 +44,7 @@ class AuthCubit extends Cubit<AuthState> {
   void login(username, password, context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     emit(Authloading());
-    var body = {"userName": "$username", "password": "$password"};
+    var body = {"user_id": "$username", "password": "$password"};
     print(body);
     repository!.login(jsonEncode(body), context).then((value) {
       var statusCode = value.statusCode;
@@ -53,9 +53,9 @@ class AuthCubit extends Cubit<AuthState> {
       print(statusCode);
       if (statusCode == 200) {
         var format = DateFormat('yyyy-MM-dd');
-        pref.setString("token", json['token']);
-        pref.setString("username", json['usernama']);
-        pref.setString("tokenExpire", format.format(DateTime.parse(json['token_expire_date'])).toString());
+        pref.setString("token", json['access_token']);
+        pref.setString("username", json['user_id']);
+        pref.setString("tokenExpire", format.format(DateTime.parse(json['expires_at_utc'])).toString());
       }
       emit(Authloaded(statusCode: statusCode, json: json));
     });

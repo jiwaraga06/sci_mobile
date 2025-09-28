@@ -5,8 +5,13 @@ import 'package:sci_mobile/source/repository/repositoryAuth.dart';
 import 'package:sci_mobile/source/repository/repositoryStockOpname.dart';
 import 'package:sci_mobile/source/router/router.dart';
 import 'package:sci_mobile/source/service/Auth/cubit/auth_cubit.dart';
+import 'package:sci_mobile/source/service/Auth/cubit/profile_cubit.dart';
+import 'package:sci_mobile/source/service/StockOpname/cubit/cutof_so_cubit.dart';
 import 'package:sci_mobile/source/service/StockOpname/cubit/get_stock_opname_cubit.dart';
 import 'package:sci_mobile/source/service/StockOpname/cubit/insert_stock_opname_cubit.dart';
+import 'package:sci_mobile/source/service/StockOpname/cubit/item_bypallet_id_cubit.dart';
+import 'package:sci_mobile/source/service/StockOpname/cubit/location_so_cubit.dart';
+import 'package:sci_mobile/source/service/StockOpname/cubit/physical_count_cubit.dart';
 
 void main() {
   runApp(MyApp(router: RouterNavigation()));
@@ -26,13 +31,19 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => AuthCubit(repository: RepositoryAuth())),
+          BlocProvider(create: (context) => ProfileCubit()),
           // STOCK OPNAME
           BlocProvider(create: (context) => GetStockOpnameCubit(repository: RepositoryStockOpname())),
           BlocProvider(create: (context) => InsertStockOpnameCubit(repository: RepositoryStockOpname())),
+          BlocProvider(create: (context) => CutofSoCubit(repository: RepositoryStockOpname())),
+          BlocProvider(create: (context) => ItemBypalletIdCubit(repository: RepositoryStockOpname())),
+          BlocProvider(create: (context) => LocationSoCubit(repository: RepositoryStockOpname())),
+          BlocProvider(create: (context) => PhysicalCountCubit(repository: RepositoryStockOpname())),
         ],
         child: MaterialApp(
           builder: EasyLoading.init(),
           onGenerateRoute: router!.generateRoute,
+          debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(
             colorScheme: const ColorScheme(

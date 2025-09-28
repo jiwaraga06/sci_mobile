@@ -9,7 +9,27 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<AuthCubit>(context).session(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+        body: Container(
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 8),
+          LoadingAnimationWidget.staggeredDotsWave(
+            color: colorBlueNavy,
+            size: 50,
+          ),
+        ],
+      ),
+    ));
   }
 }
