@@ -26,8 +26,10 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Stock Opname'),
-        actions: [IconButton(onPressed: () => Navigator.pushNamed(context, insertStockOpnameScreen), icon: Icon(Icons.add))],
+        backgroundColor: colorBlueNavy,
+         leading: IconButton(onPressed: () => Navigator.of(context).pop(), icon: Icon(Icons.arrow_back, color: Colors.white)),
+        title: Text(" Stock Opname", style: TextStyle(color: Colors.white)),
+        actions: [IconButton(onPressed: () => Navigator.pushNamed(context, insertStockOpnameScreen), icon: Icon(Icons.add, color: Colors.white))],
       ),
       body: ListView(
         children: [

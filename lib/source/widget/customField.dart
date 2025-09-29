@@ -8,6 +8,7 @@ class CustomField extends StatelessWidget {
   final Widget? preffixIcon, suffixIcon;
   final VoidCallback? onTap;
   final void Function(String)? onChanged;
+  FocusNode? focusNode;
   TextInputType? keyboardType;
   CustomField(
       {super.key,
@@ -21,6 +22,7 @@ class CustomField extends StatelessWidget {
       this.controller,
       this.keyboardType,
       this.onChanged,
+      this.focusNode,
       this.onTap});
 
   @override
@@ -31,7 +33,9 @@ class CustomField extends StatelessWidget {
       readOnly: readOnly!,
       obscureText: hidePassword!,
       keyboardType: keyboardType,
+      focusNode: focusNode,
       decoration: InputDecoration(
+        isDense: true,
         hintText: hintText,
         labelText: labelText,
         suffixIcon: suffixIcon,
@@ -42,9 +46,9 @@ class CustomField extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(color: colorBlueNavy, strokeAlign: 20),
+          borderSide: BorderSide(color: readOnly == false ? colorBlueNavy : Colors.grey, strokeAlign: 20),
         ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
       ),
       onChanged: onChanged,
       validator: (value) {

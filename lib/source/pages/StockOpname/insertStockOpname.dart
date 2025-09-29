@@ -19,13 +19,15 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
   TextEditingController controllerLotNo = TextEditingController();
   TextEditingController controllerPackageSize = TextEditingController();
   TextEditingController controllerPackageQty = TextEditingController();
-  TextEditingController controllerPackageQtyStock = TextEditingController();
 
-  bool manual = false;
+  final FocusNode focusCutOff = FocusNode();
+  final FocusNode focusLocation = FocusNode();
+  final FocusNode focusPalletID = FocusNode();
+  bool manual = true;
   void changeManual(bool? value) {
     setState(() {
       manual = !manual;
-      if (manual) {
+      if (manual == false) {
         BlocProvider.of<CutofSoCubit>(context).getCutOf(context);
         // clear();
       }
@@ -53,7 +55,6 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
       controllerLotNo.clear();
       controllerPackageSize.clear();
       controllerPackageQty.clear();
-      controllerPackageQtyStock.clear();
     });
   }
 
@@ -64,11 +65,21 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
   }
 
   @override
+  void dispose() {
+    focusCutOff.dispose();
+    focusLocation.dispose();
+    focusPalletID.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Insert Stock Opname"),
-        actions: [Switch(value: manual, onChanged: changeManual)],
+        leading: IconButton(onPressed: () => Navigator.of(context).pop(), icon: Icon(Icons.arrow_back, color: Colors.white)),
+        backgroundColor: colorBlueNavy,
+        title: Text("Insert Stock Opname", style: TextStyle(color: Colors.white)),
+        actions: [Switch(value: manual, onChanged: changeManual, activeTrackColor: Colors.green)],
       ),
       body: MultiBlocListener(
         listeners: [
@@ -80,16 +91,17 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
               if (state is CutofSoFailed) {
                 EasyLoading.dismiss();
               }
-              if (state is CutofSoLoaded) {
+              if (state is CutofSoLoadedSingle) {
                 EasyLoading.dismiss();
                 var json = state.model;
                 // var statusCode = state.statusCode;
-                if (manual == false) {
+                if (manual == true) {
                   if (json!.length == 0) {
                     // MyDialog.dialogAlert(context, "Data tidak ditemukan");
                   } else {
                     print("sini");
                     setState(() {
+                      FocusScope.of(context).requestFocus(focusLocation);
                       json.forEach((a) {
                         valueOidCutOff = a.oid;
                         controllerWarehouseCutOff = TextEditingController(text: a.warehouseCode!);
@@ -119,6 +131,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                     setState(() {
                       valueLocationId = json.id;
                       print(valueLocationId);
+                      FocusScope.of(context).requestFocus(focusPalletID);
                     });
                   }
                 }
@@ -154,7 +167,6 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                           controllerLotNo = TextEditingController(text: json.data.lotNo);
                           controllerPackageSize = TextEditingController(text: json.data.qtyPackageSizeCounted!.toString());
                           controllerPackageQty = TextEditingController(text: json.data.qtyPackagingPerPalletCounted!.toString());
-                          controllerPackageQtyStock = TextEditingController(text: result.toString());
                         });
                       },
                     );
@@ -166,7 +178,6 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                       controllerLotNo = TextEditingController(text: json.data.lotNo);
                       controllerPackageSize = TextEditingController(text: json.data.qtyPackageSizeCounted!.toString());
                       controllerPackageQty = TextEditingController(text: json.data.qtyPackagingPerPalletCounted!.toString());
-                      controllerPackageQtyStock = TextEditingController(text: result.toString());
                     });
                   }
                 }
@@ -253,6 +264,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                     items: data!.map((e) => e.code).toList(),
                                     dropdownDecoratorProps: const DropDownDecoratorProps(
                                       dropdownSearchDecoration: InputDecoration(
+                                          isDense: true,
                                           border: OutlineInputBorder(),
                                           contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                                           hintText: "Cut Off",
@@ -282,7 +294,10 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                     readOnly: false,
                                     hidePassword: false,
                                     controller: controllerCodeCutOff,
-                                    labelText: "Cut Off",
+                                    labelText: "Scan Cut Off",
+                                    hintText: "Scan qr code cut off",
+                                    suffixIcon: Icon(Icons.qr_code_2),
+                                    focusNode: focusCutOff,
                                     onChanged: (value) {
                                       setState(() {
                                         if (controllerCodeCutOff.text.isNotEmpty) {
@@ -290,6 +305,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                         }
                                       });
                                     },
+                                    messageError: "Please fill this column",
                                   ),
                                 ],
                               ),
@@ -299,6 +315,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                               hidePassword: false,
                               controller: controllerWarehouseCutOff,
                               labelText: "Warehouse",
+                              messageError: "Please fill this column",
                             ),
                             const SizedBox(height: 6),
                             CustomField(
@@ -306,6 +323,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                               hidePassword: false,
                               controller: controllerDateCutOff,
                               labelText: "Cut Off Date",
+                              messageError: "Please fill this column",
                             ),
                             const SizedBox(height: 6),
                             // LOCATION
@@ -318,8 +336,9 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                       items: [].map((e) => e).toList(),
                                       dropdownDecoratorProps: const DropDownDecoratorProps(
                                         dropdownSearchDecoration: InputDecoration(
+                                            isDense: true,
                                             border: OutlineInputBorder(),
-                                            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                            contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                                             hintText: "Location",
                                             labelText: "Location",
                                             labelStyle: TextStyle(color: Colors.black),
@@ -333,8 +352,9 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                       items: [].map((e) => e).toList(),
                                       dropdownDecoratorProps: const DropDownDecoratorProps(
                                         dropdownSearchDecoration: InputDecoration(
+                                            isDense: true,
                                             border: OutlineInputBorder(),
-                                            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                            contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                                             hintText: "Location",
                                             labelText: "Location",
                                             labelStyle: TextStyle(color: Colors.black),
@@ -348,8 +368,9 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                     items: data!.map((e) => e.name).toList(),
                                     dropdownDecoratorProps: const DropDownDecoratorProps(
                                       dropdownSearchDecoration: InputDecoration(
+                                          isDense: true,
                                           border: OutlineInputBorder(),
-                                          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                          contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                                           hintText: "Location",
                                           labelText: "Location",
                                           labelStyle: TextStyle(color: Colors.black),
@@ -375,7 +396,11 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                     readOnly: false,
                                     hidePassword: false,
                                     controller: controllerLocationCode,
-                                    labelText: "Location",
+                                    focusNode: focusLocation,
+                                    labelText: "Scan Cut Location",
+                                    hintText: "Scan qr code location",
+                                    suffixIcon: Icon(Icons.qr_code_2),
+                                    messageError: "Please fill this column",
                                     onChanged: (value) {
                                       setState(() {
                                         if (controllerCodeCutOff.text.isNotEmpty) {
@@ -386,12 +411,16 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                   ),
                                 ],
                               ),
-                            const SizedBox(height: 40),
+                            const SizedBox(height: 20),
                             CustomField(
                               readOnly: false,
                               hidePassword: false,
                               controller: controllerPalletId,
-                              labelText: "Pallet ID",
+                              focusNode: focusPalletID,
+                              labelText: "Scan Pallet ID",
+                              hintText: "Scan qr code pallet id",
+                              suffixIcon: Icon(Icons.qr_code_2),
+                              messageError: "Please fill this column",
                               onChanged: (value) {
                                 setState(() {
                                   if (controllerPalletId.text.isNotEmpty) {
@@ -407,6 +436,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                               hidePassword: false,
                               controller: controllerItemDesc,
                               labelText: "Item Description",
+                              messageError: "Please fill this column",
                             ),
                             const SizedBox(height: 6),
                             CustomField(
@@ -414,6 +444,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                               hidePassword: false,
                               controller: controllerLotNo,
                               labelText: "Lot No",
+                              messageError: "Please fill this column",
                             ),
                             const SizedBox(height: 6),
                             CustomField(
@@ -421,28 +452,16 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                               hidePassword: false,
                               controller: controllerPackageSize,
                               labelText: "Package Size",
+                              messageError: "Please fill this column",
                             ),
                             const SizedBox(height: 6),
                             CustomField(
                               readOnly: false,
                               hidePassword: false,
                               controller: controllerPackageQty,
+                              keyboardType: TextInputType.number,
                               labelText: "Package Qty/Pallet",
-                              onChanged: (value) {
-                                setState(() {
-                                  if (controllerPackageQty.text.isNotEmpty) {
-                                    num result = num.parse(controllerPackageSize.text) * num.parse(value);
-                                    controllerPackageQtyStock = TextEditingController(text: result.toString());
-                                  }
-                                });
-                              },
-                            ),
-                            const SizedBox(height: 6),
-                            CustomField(
-                              readOnly: true,
-                              hidePassword: false,
-                              controller: controllerPackageQtyStock,
-                              labelText: "Qty Stock",
+                              messageError: "Please fill this column",
                             ),
                           ],
                         )),

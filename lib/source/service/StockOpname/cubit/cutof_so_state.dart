@@ -20,3 +20,9 @@ final class CutofSoLoaded extends CutofSoState {
 
   CutofSoLoaded({required this.statusCode, required this.model});
 }
+final class CutofSoLoadedSingle extends CutofSoState {
+  final int? statusCode;
+  final List<ModelCutOf>? model;
+
+  CutofSoLoadedSingle({required this.statusCode, required this.model});
+}

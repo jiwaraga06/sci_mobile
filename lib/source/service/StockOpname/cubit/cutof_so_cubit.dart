@@ -46,7 +46,7 @@ class CutofSoCubit extends Cubit<CutofSoState> {
       } else if (statusCode == 400) {
         emit(CutofSoFailed(statusCode: statusCode, json: json));
       } else {
-        emit(CutofSoLoaded(statusCode: statusCode, model: modelCutOfFromJson(jsonEncode(json))));
+        emit(CutofSoLoadedSingle(statusCode: statusCode, model: modelCutOfFromJson(jsonEncode(json))));
       }
     });
   }

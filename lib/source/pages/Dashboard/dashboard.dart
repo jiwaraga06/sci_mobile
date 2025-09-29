@@ -23,6 +23,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(toolbarHeight: 0),
       body: Column(
         children: [
           Expanded(
@@ -39,26 +40,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     var data = (state as ProfileLoaded).json;
                     return Container(
                       margin: const EdgeInsets.only(left: 12, right: 12),
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
                       decoration: BoxDecoration(color: colorBlueNavy, borderRadius: BorderRadius.circular(12)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Text("Hallo ,", style: TextStyle(fontSize: 16, color: Colors.white)),
-                              const SizedBox(height: 8),
-                              Text(data['username'].toString(), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white)),
+                              Image.asset("assets/img/user.png", height: 50),
+                              const SizedBox(width: 6),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Hallo ,", style: TextStyle(fontSize: 16, color: Colors.white)),
+                                  const SizedBox(height: 2),
+                                  Text(data['username'].toString(), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white)),
+                                ],
+                              ),
                             ],
                           ),
-                          Icon(Icons.notification_important_rounded, size: 25, color: Colors.white)
+                          Row(
+                            children: [
+                              InkWell(onTap: logout, child: Icon(Icons.logout, size: 25, color: Colors.white)),
+                              const SizedBox(width: 6),
+                              Icon(Icons.notification_important_rounded, size: 25, color: Colors.white),
+                            ],
+                          )
                         ],
                       ),
                     );
                   },
                 ),
                 const SizedBox(height: 30),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text("Menu", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
@@ -67,38 +81,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Container(
                   child: GridView.count(
                     shrinkWrap: true,
-                    crossAxisSpacing: 1,
+                    crossAxisSpacing: 2,
                     mainAxisSpacing: 2,
-                    crossAxisCount: 3,
+                    crossAxisCount: 2,
+                    childAspectRatio: 2,
                     children: [
                       InkWell(
                         onTap: () {
                           Navigator.pushNamed(context, stockOpnameScreen);
                         },
-                        child: Column(
-                          children: [
-                            Ink(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(color: colorBlueLight, borderRadius: BorderRadius.circular(8)),
-                                child: Icon(Icons.add_box, color: Colors.white)),
-                            SizedBox(height: 10),
-                            Text("Stock Opname", style: TextStyle(fontWeight: FontWeight.w500))
-                          ],
+                        child: Container(
+                          margin: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(color: colorBlueNavy, borderRadius: BorderRadius.circular(12)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.shopping_bag, size: 45, color: Colors.white),
+                              SizedBox(height: 10),
+                              Text("Stock Opname", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: Colors.white))
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
               ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-            child: CustomButton(
-              bkackgroundColor: Colors.red[800],
-              onTap: logout,
-              text: "LOGOUT",
-              textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             ),
           ),
         ],
