@@ -38,8 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
             var json = state.json;
             var statusCode = state.statusCode;
             if (statusCode == 200) {
-              EasyLoading.showSuccess("Login Berhasil !");
-              await Future.delayed(const Duration(seconds: 2));
+              // EasyLoading.showSuccess("Login Berhasil !");
+              await Future.delayed(const Duration(seconds: 1));
               Navigator.pushNamedAndRemoveUntil(context, dashboardScreen, (route) => false);
             } else {
               MyDialog.dialogAlert(context, "Maaf, terjadi kesalahan");
@@ -91,11 +91,14 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
-                child: CustomButton(
-                  onTap: login,
-                  bkackgroundColor: colorBlueNavy,
-                  text: "LOGIN",
-                  textStyle: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+                child: SizedBox(
+                  height: 45,
+                  child: CustomButton(
+                    onTap: login,
+                    bkackgroundColor: colorBlueNavy,
+                    text: "LOGIN",
+                    textStyle: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
                 ),
               )
             ],

@@ -27,36 +27,42 @@ class CustomField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      onTap: onTap,
-      controller: controller,
-      readOnly: readOnly!,
-      obscureText: hidePassword!,
-      keyboardType: keyboardType,
-      focusNode: focusNode,
-      decoration: InputDecoration(
-        isDense: true,
-        hintText: hintText,
-        labelText: labelText,
-        suffixIcon: suffixIcon,
-        prefixIcon: preffixIcon,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(color: Colors.grey.withOpacity(0.8), width: 2),
+    return SizedBox(
+      height: 45,
+      child: TextFormField(
+        onTap: onTap,
+        controller: controller,
+        readOnly: readOnly!,
+        obscureText: hidePassword!,
+        keyboardType: keyboardType,
+        focusNode: focusNode,
+        style: TextStyle(fontSize: 14),
+        decoration: InputDecoration(
+          // isDense: true,
+          hintText: hintText,
+          labelText: labelText,
+          suffixIcon: suffixIcon,
+          prefixIcon: preffixIcon,
+          hintStyle: TextStyle(fontSize: 14),
+          labelStyle: TextStyle(fontSize: 14),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.8), width: 2),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+            borderSide: BorderSide(color: readOnly == false ? colorBlueNavy : Colors.grey, strokeAlign: 20),
+          ),
+          contentPadding: const EdgeInsets.symmetric( horizontal: 6),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(color: readOnly == false ? colorBlueNavy : Colors.grey, strokeAlign: 20),
-        ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+        onChanged: onChanged,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return messageError;
+          }
+          return null;
+        },
       ),
-      onChanged: onChanged,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return messageError;
-        }
-        return null;
-      },
     );
   }
 }

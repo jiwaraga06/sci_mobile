@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sci_mobile/source/env/env.dart';
+import 'package:sci_mobile/source/env/numberFormat.dart';
 import 'package:sci_mobile/source/router/string.dart';
 import 'package:sci_mobile/source/service/Auth/cubit/auth_cubit.dart';
 import 'package:sci_mobile/source/service/Auth/cubit/profile_cubit.dart';

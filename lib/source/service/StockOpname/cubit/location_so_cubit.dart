@@ -18,6 +18,7 @@ class LocationSoCubit extends Cubit<LocationSoState> {
 
   void getLocationSOList(context, oid) async {
     emit(LocationSoLoading());
+    print("loading");
     repository!.getLocationSO(context, oid).then((value) {
       var json = jsonDecode(value.body);
       var statusCode = value.statusCode;

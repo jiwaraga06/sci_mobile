@@ -96,9 +96,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.shopping_bag, size: 45, color: Colors.white),
+                              Icon(Icons.shopping_bag, size: 35, color: Colors.white),
                               SizedBox(height: 10),
-                              Text("Stock Opname", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: Colors.white))
+                              Text("Stock Opname", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.white))
                             ],
                           ),
                         ),
