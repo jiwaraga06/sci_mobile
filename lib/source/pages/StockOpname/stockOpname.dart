@@ -243,6 +243,8 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (BuildContext context, int index) {
                             var a = data.data[index];
+                            num varianceCounted = a.qtyStockCounted! - a.qtyStockSystem!;
+                            num variancePerPallet = a.qtyPackagingPerPalletCounted! ?? 0 - a.qtyPackagingPerPalletSystem! ?? 0;
                             return Container(
                               margin: const EdgeInsets.only(top: 4, left: 4, right: 4),
                               child: Card(
@@ -283,14 +285,14 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
                                               ),
                                               DataCell(
                                                 Text(
-                                                  a.qtyStockSystem != null
-                                                      ? "${formatRupiah(int.parse(a.qtyStockSystem!.toStringAsFixed(0)))} ${a.unitMeasureCode ?? ''}"
-                                                      : "-", // kalau null tampilkan strip
+                                                  "${formatRupiah(int.parse(a.qtyStockSystem!.toStringAsFixed(0)))} ${a.unitMeasureCode ?? ''}", // kalau null tampilkan strip
                                                 ),
                                               ),
                                               DataCell(
                                                 Text(
-                                                  a.qtyPackageSizeCounted != null ? "${formatRupiah(int.parse(a.qtyPackageSizeCounted!.toStringAsFixed(0)))} ${a.unitMeasureCode ?? ''}" : "-", // kalau null tampilkan strip
+                                                  a.qtyPackageSizeCounted != null
+                                                      ? "${formatRupiah(int.parse(varianceCounted.toStringAsFixed(0)))} ${a.unitMeasureCode ?? ''}"
+                                                      : "-", // kalau null tampilkan strip
                                                 ),
                                               ),
                                             ]),
@@ -313,7 +315,7 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
                                               DataCell(
                                                 Text(
                                                   a.qtyStandardZak != null
-                                                      ? "${formatRupiah(int.parse(a.qtyStandardZak!.toStringAsFixed(0)))} Zak"
+                                                      ? "${formatRupiah(int.parse(variancePerPallet.toStringAsFixed(0)))} Zak"
                                                       : "-", // kalau null tampilkan strip
                                                 ),
                                               ),
