@@ -9,7 +9,7 @@ class InsertStockOpnameScreen extends StatefulWidget {
 
 class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
   final formkey = GlobalKey<FormState>();
-  var valueCodeCutOff, valueOidCutOff, valueLocationId, valueLocationName, unit_measure_code;
+  var valueCodeCutOff, valueOidCutOff, valueLocationId, valueLocationName, unit_measure_code, valueQtyZak;
   TextEditingController controllerWarehouseCutOff = TextEditingController();
   TextEditingController controllerDateCutOff = TextEditingController();
   TextEditingController controllerCodeCutOff = TextEditingController();
@@ -37,9 +37,25 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
 
   void save() {
     if (formkey.currentState!.validate()) {
-      // if (valueOidCutOff != null && valueLocationId != null) {
-        BlocProvider.of<InsertStockOpnameCubit>(context).save(context, valueOidCutOff, valueLocationId, controllerPalletId.text, controllerPackageQty.text);
-      // }
+      final inputText = controllerPackageQty.text.replaceAll(',', '.');
+
+      final packageQty = num.tryParse(inputText) ?? 0;
+      final zakQty = num.tryParse(valueQtyZak.toString()) ?? 0;
+      print("packageQty: $packageQty");
+      if (packageQty < zakQty) {
+        BlocProvider.of<InsertStockOpnameCubit>(context).save(
+          context,
+          valueOidCutOff,
+          valueLocationId,
+          controllerPalletId.text,
+          packageQty.toString(),
+        );
+      } else {
+        MyDialog.dialogAlert(
+          context,
+          "Qty Package per pallet tidak boleh melebihi standar pallet",
+        );
+      }
     }
   }
 
@@ -53,11 +69,11 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
       // controllerDateCutOff.clear();
       // controllerCodeCutOff.clear();
       // controllerLocationCode.clear();
-      controllerPalletId.clear();
-      controllerItemDesc.clear();
-      controllerLotNo.clear();
-      controllerPackageSize.clear();
-      controllerPackageQty.clear();
+      // controllerPalletId.clear();
+      // controllerItemDesc.clear();
+      // controllerLotNo.clear();
+      // controllerPackageSize.clear();
+      // controllerPackageQty.clear();
     });
   }
 
@@ -166,7 +182,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                 EasyLoading.showError(json['message']);
                 // MyDialog.dialogAlert(context, json['message']);
                 setState(() {
-                  controllerPalletId.clear();
+                  // controllerPalletId.clear();
                   controllerItemDesc.clear();
                   controllerLotNo.clear();
                   controllerPackageSize.clear();
@@ -190,19 +206,20 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                           controllerLotNo = TextEditingController(text: json.data.lotNo);
                           controllerPackageSize = TextEditingController(text: json.data.qtyPackageSizeCounted!.toString());
                           controllerPackageQty = TextEditingController(text: json.data.qtyPackagingPerPalletCounted!.toString());
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            FocusScope.of(context).requestFocus(focusQty);
-                            if (!focusQty.hasListeners) {
-                              focusQty.addListener(() {
-                                if (focusQty.hasFocus) {
-                                  controllerPackageQty.selection = TextSelection(
-                                    baseOffset: 0,
-                                    extentOffset: controllerPackageQty.text.length,
-                                  );
-                                }
-                              });
-                            }
-                          });
+                          valueQtyZak = json.data.qtyStandardZak;
+                          // WidgetsBinding.instance.addPostFrameCallback((_) {
+                          FocusScope.of(context).requestFocus(focusQty);
+                          if (!focusQty.hasListeners) {
+                            focusQty.addListener(() {
+                              if (focusQty.hasFocus) {
+                                controllerPackageQty.selection = TextSelection(
+                                  baseOffset: 0,
+                                  extentOffset: controllerPackageQty.text.length,
+                                );
+                              }
+                            });
+                          }
+                          // });
                         });
                       },
                     );
@@ -213,21 +230,20 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                       controllerLotNo = TextEditingController(text: json.data.lotNo);
                       controllerPackageSize = TextEditingController(text: json.data.qtyPackageSizeCounted!.toString());
                       controllerPackageQty = TextEditingController(text: json.data.qtyPackagingPerPalletCounted!.toString());
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        FocusScope.of(context).requestFocus(focusQty);
-
-                        // Pastikan hanya add listener sekali!
-                        if (!focusQty.hasListeners) {
-                          focusQty.addListener(() {
-                            if (focusQty.hasFocus) {
-                              controllerPackageQty.selection = TextSelection(
-                                baseOffset: 0,
-                                extentOffset: controllerPackageQty.text.length,
-                              );
-                            }
-                          });
-                        }
-                      });
+                      valueQtyZak = json.data.qtyStandardZak;
+                      // WidgetsBinding.instance.addPostFrameCallback((_) {
+                      FocusScope.of(context).requestFocus(focusQty);
+                      if (!focusQty.hasListeners) {
+                        focusQty.addListener(() {
+                          if (focusQty.hasFocus) {
+                            controllerPackageQty.selection = TextSelection(
+                              baseOffset: 0,
+                              extentOffset: controllerPackageQty.text.length,
+                            );
+                          }
+                        });
+                      }
+                      // });
                     });
                   }
                 }
@@ -328,6 +344,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                       setState(() {
                                         data.where((e) => e.code == value).forEach((a) {
                                           valueOidCutOff = a.oid;
+                                          controllerCodeCutOff = TextEditingController(text: a.code!);
                                           controllerWarehouseCutOff = TextEditingController(text: a.warehouseCode!);
                                           controllerDateCutOff = TextEditingController(text: formatDate.format(DateTime.parse(a.date!)));
                                           BlocProvider.of<LocationSoCubit>(context).getLocationSOList(context, valueOidCutOff);
@@ -447,6 +464,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                         data.where((e) => e.name == value).forEach((a) {
                                           valueLocationId = a.id;
                                           valueLocationName = a.name;
+                                          controllerLocationCode = TextEditingController(text: a.name);
                                         });
                                       });
                                     },

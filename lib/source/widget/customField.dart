@@ -28,7 +28,7 @@ class CustomField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: messageError!.isEmpty? 45 : 60,
+      height: 45,
       child: TextFormField(
         onTap: onTap,
         controller: controller,
@@ -53,7 +53,7 @@ class CustomField extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
             borderSide: BorderSide(color: readOnly == false ? colorBlueNavy : Colors.grey, strokeAlign: 20),
           ),
-          contentPadding: const EdgeInsets.symmetric( horizontal: 6),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 6),
         ),
         onChanged: onChanged,
         validator: (value) {

@@ -23,92 +23,173 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(toolbarHeight: 0),
-      body: Column(
+      appBar: AppBar(
+        backgroundColor: colorBlueNavy,
+        elevation: 0.0,
+        title: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            if (state is ProfileLoading) {
+              return Container();
+            }
+            if (state is ProfileLoaded == false) {
+              return Container();
+            }
+            var data = (state as ProfileLoaded).json;
+
+            return Text("Hallo , ${data['username'].toString()}", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500));
+          },
+        ),
+      ),
+      body: ListView(
         children: [
-          Expanded(
-            child: ListView(
-              children: [
-                BlocBuilder<ProfileCubit, ProfileState>(
-                  builder: (context, state) {
-                    if (state is ProfileLoading) {
-                      return Container();
-                    }
-                    if (state is ProfileLoaded == false) {
-                      return Container();
-                    }
-                    var data = (state as ProfileLoaded).json;
-                    return Container(
-                      margin: const EdgeInsets.only(left: 12, right: 12),
-                      padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
-                      decoration: BoxDecoration(color: colorBlueNavy, borderRadius: BorderRadius.circular(12)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            children: [
+              Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 8.5,
+                    decoration: const BoxDecoration(color: colorBlueNavy),
+                  ),
+                  Column(
+                    children: [
+                      const SizedBox(height: 40),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Image.asset("assets/img/user.png", height: 50),
-                              const SizedBox(width: 6),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Hallo ,", style: TextStyle(fontSize: 16, color: Colors.white)),
-                                  const SizedBox(height: 2),
-                                  Text(data['username'].toString(), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white)),
-                                ],
-                              ),
-                            ],
+                          Container(
+                            decoration: BoxDecoration(
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color.fromARGB(62, 63, 63, 63),
+                                  spreadRadius: 1,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 5), // changes position of shadow
+                                )
+                              ],
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            height: 120,
+                            margin: const EdgeInsets.only(right: 20, left: 20, top: 10),
+                            child: Stack(
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Container(
+                                          height: 120,
+                                          decoration: const BoxDecoration(
+                                            image: DecorationImage(
+                                              image: AssetImage('assets/img/landing.jpg'),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              InkWell(onTap: logout, child: Icon(Icons.logout, size: 25, color: Colors.white)),
-                              const SizedBox(width: 6),
-                              Icon(Icons.notification_important_rounded, size: 25, color: Colors.white),
-                            ],
-                          )
+                          const SizedBox(height: 10),
+                          GridView.count(
+                              shrinkWrap: true,
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 12,
+                              crossAxisSpacing: 12,
+                              physics: NeverScrollableScrollPhysics(),
+                              padding: const EdgeInsets.all(12),
+                              childAspectRatio: 1, // width / height = 1 -> kotak
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, stockOpnameScreen);
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(color: colorMerah1, borderRadius: BorderRadius.circular(8)),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.all_inbox_sharp, size: 30, color: Colors.white),
+                                        const SizedBox(height: 6),
+                                        AutoSizeText('Stock Opname',
+                                            maxLines: 1, minFontSize: 14, style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500)),
+                                        AutoSizeText('(Finished Goods)',
+                                            maxLines: 1, minFontSize: 14, style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(color: colorMerah1, borderRadius: BorderRadius.circular(8)),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.all_inbox_sharp, size: 30, color: Colors.white),
+                                        const SizedBox(height: 6),
+                                        AutoSizeText('Stock Opname',
+                                            maxLines: 1, minFontSize: 14, style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500)),
+                                        AutoSizeText('(Sparepart)',
+                                            maxLines: 1, minFontSize: 14, style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(color: colorYellow2, borderRadius: BorderRadius.circular(8)),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.web, size: 30, color: Colors.white),
+                                        const SizedBox(height: 6),
+                                        AutoSizeText('Consumable Issue',
+                                            maxLines: 1, minFontSize: 14, style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(color: colorYellow2, borderRadius: BorderRadius.circular(8)),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.paste_outlined, size: 30, color: Colors.white),
+                                        const SizedBox(height: 6),
+                                        AutoSizeText('Put Away',
+                                            maxLines: 1, minFontSize: 14, style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ]),
                         ],
                       ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 30),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Text("Menu", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    crossAxisSpacing: 2,
-                    mainAxisSpacing: 2,
-                    crossAxisCount: 2,
-                    childAspectRatio: 2,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(context, stockOpnameScreen);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(color: colorBlueNavy, borderRadius: BorderRadius.circular(12)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.shopping_bag, size: 35, color: Colors.white),
-                              SizedBox(height: 10),
-                              Text("Stock Opname", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.white))
-                            ],
-                          ),
-                        ),
-                      ),
                     ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 10),
+            ],
+          )
         ],
       ),
     );

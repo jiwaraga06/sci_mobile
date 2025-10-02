@@ -25,7 +25,7 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: true,
       onPopInvoked: (didPop) {
         BlocProvider.of<PhysicalCountCubit>(context).clearList(context);
       },
@@ -217,7 +217,7 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
                                   children: [
                                     TableRow(
                                       children: [
-                                        const Text('Pallet Counted', style: TextStyle(fontSize: 15)),
+                                        const Text('Pallet Counted', style: TextStyle(fontSize: 16)),
                                         const Text(':', style: TextStyle(fontSize: 15)),
                                         Text("${data!.summary.entry.palletCount}", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
                                       ],
@@ -227,7 +227,7 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
                                     ),
                                     TableRow(
                                       children: [
-                                        const Text('Qty Counted', style: TextStyle(fontSize: 15)),
+                                        const Text('Qty Counted', style: TextStyle(fontSize: 16)),
                                         const Text(':', style: TextStyle(fontSize: 15)),
                                         Text("${formatRupiah(int.parse(data!.summary.entry.totalQtyStockCounted!.toStringAsFixed(0)))}",
                                             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
@@ -261,7 +261,7 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
                                         const SizedBox(height: 6),
                                         Align(
                                             alignment: Alignment.centerLeft,
-                                            child: Text(a.itemDescription1!, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500))),
+                                            child: Text(a.palletId!, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500))),
                                         const SizedBox(height: 6),
                                         SingleChildScrollView(
                                           scrollDirection: Axis.horizontal,
@@ -273,14 +273,14 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
                                             dataRowMaxHeight: 30,
                                             headingRowHeight: 32,
                                             columns: const [
-                                              DataColumn(label: Text("Lot/Pallet ID")),
+                                              DataColumn(label: Text("Item/Lot")),
                                               DataColumn(label: Text("Qty (Count)")),
                                               DataColumn(label: Text("Qty (System)")),
                                               DataColumn(label: Text("Qty (Variance)")),
                                             ],
                                             rows: [
                                               DataRow(cells: [
-                                                DataCell(Text(a.lotNo!)),
+                                                DataCell(Text(a.itemDescription1!)),
                                                 DataCell(
                                                   Text("${formatRupiah(int.parse(a.qtyStockCounted!.toStringAsFixed(0)))} ${a.unitMeasureCode ?? ''}"),
                                                 ),
@@ -294,7 +294,7 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
                                                 ),
                                               ]),
                                               DataRow(cells: [
-                                                DataCell(Text(a.palletId!)),
+                                                DataCell(Text(a.lotNo!)),
                                                 DataCell(
                                                   Text("${formatRupiah(int.parse(a.qtyPackagingPerPalletCounted!.toStringAsFixed(0)))} Zak"),
                                                 ),

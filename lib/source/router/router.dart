@@ -51,7 +51,7 @@ class RouterNavigation {
         );
       case dashboardScreen:
         return PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => const DashboardScreen(),
+          pageBuilder: (context, animation, secondaryAnimation) => const BottomNavbar(),
           transitionsBuilder: bottomToTop,
         );
       case stockOpnameScreen:

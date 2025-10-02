@@ -12,6 +12,8 @@ const colorGreenDark = Color(0XFF50623A);
 const colorGreenDarkTeal = Color(0XFF0A6847);
 const colorYellow = Color(0XFFFEB941);
 const colorGrey1 = Color(0XFFD1D3D4);
+const colorMerah1 = Color(0XFFED3F27);
+const colorYellow2 = Color(0XFFFEB21A);
 
 // date
 var formatDate = DateFormat('yyyy-MM-dd');
