@@ -42,7 +42,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
       final packageQty = num.tryParse(inputText) ?? 0;
       final zakQty = num.tryParse(valueQtyZak.toString()) ?? 0;
       print("packageQty: $packageQty");
-      if (packageQty < zakQty) {
+      if (packageQty <= zakQty) {
         BlocProvider.of<InsertStockOpnameCubit>(context).save(
           context,
           valueOidCutOff,
@@ -69,11 +69,12 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
       // controllerDateCutOff.clear();
       // controllerCodeCutOff.clear();
       // controllerLocationCode.clear();
-      // controllerPalletId.clear();
-      // controllerItemDesc.clear();
-      // controllerLotNo.clear();
-      // controllerPackageSize.clear();
-      // controllerPackageQty.clear();
+
+      controllerPalletId.clear();
+      controllerItemDesc.clear();
+      controllerLotNo.clear();
+      controllerPackageSize.clear();
+      controllerPackageQty.clear();
     });
   }
 
@@ -182,7 +183,7 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                 EasyLoading.showError(json['message']);
                 // MyDialog.dialogAlert(context, json['message']);
                 setState(() {
-                  // controllerPalletId.clear();
+                  controllerPalletId.clear();
                   controllerItemDesc.clear();
                   controllerLotNo.clear();
                   controllerPackageSize.clear();
