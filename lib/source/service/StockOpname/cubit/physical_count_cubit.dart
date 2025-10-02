@@ -32,4 +32,8 @@ class PhysicalCountCubit extends Cubit<PhysicalCountState> {
       }
     });
   }
+
+  void clearList(context) {
+    emit(PhysicalCountInitial());
+  }
 }

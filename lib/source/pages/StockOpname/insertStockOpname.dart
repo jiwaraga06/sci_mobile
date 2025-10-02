@@ -37,7 +37,9 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
 
   void save() {
     if (formkey.currentState!.validate()) {
-      BlocProvider.of<InsertStockOpnameCubit>(context).save(context, valueOidCutOff, valueLocationId, controllerPalletId.text, controllerPackageQty.text);
+      // if (valueOidCutOff != null && valueLocationId != null) {
+        BlocProvider.of<InsertStockOpnameCubit>(context).save(context, valueOidCutOff, valueLocationId, controllerPalletId.text, controllerPackageQty.text);
+      // }
     }
   }
 
@@ -100,6 +102,12 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                 if (manual == true) {
                   if (json!.length == 0) {
                     // MyDialog.dialogAlert(context, "Data tidak ditemukan");
+                    EasyLoading.showError("Data tidak ditemukan");
+                    setState(() {
+                      valueOidCutOff = null;
+                      controllerWarehouseCutOff.clear();
+                      controllerDateCutOff.clear();
+                    });
                   } else {
                     print("sini");
                     setState(() {
@@ -122,13 +130,19 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
               }
               if (state is LocationSoFailed) {
                 EasyLoading.dismiss();
+                var json = state.json;
+                EasyLoading.showError(json['message']);
+                setState(() {
+                  valueLocationId = null;
+                  controllerLocationCode.clear();
+                });
               }
               if (state is LocationSoCodeLoaded) {
                 EasyLoading.dismiss();
                 var json = state.model!;
                 var statusCode = state.statusCode;
                 if (statusCode == 200) {
-                  EasyLoading.showSuccess("Location Available");
+                  // EasyLoading.showSuccess("Location Available");
                   if (manual == true) {
                     setState(() {
                       valueLocationId = json.id;
@@ -149,7 +163,15 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                 EasyLoading.dismiss();
                 var json = state.json;
                 var statusCode = state.statusCode;
+                EasyLoading.showError(json['message']);
                 // MyDialog.dialogAlert(context, json['message']);
+                setState(() {
+                  controllerPalletId.clear();
+                  controllerItemDesc.clear();
+                  controllerLotNo.clear();
+                  controllerPackageSize.clear();
+                  controllerPackageQty.clear();
+                });
               }
               if (state is ItemBypalletIdLoaded) {
                 EasyLoading.dismiss();
@@ -338,7 +360,8 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                             child: Icon(Icons.close))
                                         : SizedBox.shrink(),
                                     focusNode: focusCutOff,
-                                    onChanged: (value) {
+                                    onChanged: (value) async {
+                                      await Future.delayed(Duration(milliseconds: 500));
                                       setState(() {
                                         if (controllerCodeCutOff.text.isNotEmpty) {
                                           BlocProvider.of<CutofSoCubit>(context).getCutOfCode(context, value);
@@ -442,10 +465,17 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                                     hintText: "Scan QR Code location",
                                     preffixIcon: Icon(Icons.qr_code_2),
                                     messageError: "Please fill this column",
-                                    onChanged: (value) {
+                                    onChanged: (value) async {
+                                      await Future.delayed(Duration(milliseconds: 500));
                                       setState(() {
-                                        if (controllerCodeCutOff.text.isNotEmpty) {
-                                          BlocProvider.of<LocationSoCubit>(context).getLocationSOCode(context, valueOidCutOff, value);
+                                        if (controllerCodeCutOff.text.isEmpty) {
+                                          EasyLoading.showError("QR Cut Off code belum di Scan");
+                                          controllerLocationCode.clear();
+                                          valueLocationId = null;
+                                        } else {
+                                          if (controllerCodeCutOff.text.isNotEmpty) {
+                                            BlocProvider.of<LocationSoCubit>(context).getLocationSOCode(context, valueOidCutOff, value);
+                                          }
                                         }
                                       });
                                     },
@@ -462,11 +492,21 @@ class _InsertStockOpnameScreenState extends State<InsertStockOpnameScreen> {
                               hintText: "Scan QR Code Pallet ID",
                               preffixIcon: Icon(Icons.qr_code_2),
                               messageError: "Please fill this column",
-                              onChanged: (value) {
+                              onChanged: (value) async {
+                                await Future.delayed(Duration(milliseconds: 500));
                                 setState(() {
-                                  if (controllerPalletId.text.isNotEmpty) {
-                                    BlocProvider.of<ItemBypalletIdCubit>(context)
-                                        .scanPalletId(context, valueOidCutOff, valueLocationId, controllerPalletId.text);
+                                  if (controllerLocationCode.text.isEmpty) {
+                                    EasyLoading.showError("Location belum di Scan");
+                                    controllerPalletId.clear();
+                                    controllerItemDesc.clear();
+                                    controllerLotNo.clear();
+                                    controllerPackageSize.clear();
+                                    controllerPackageQty.clear();
+                                  } else {
+                                    if (controllerPalletId.text.isNotEmpty) {
+                                      BlocProvider.of<ItemBypalletIdCubit>(context)
+                                          .scanPalletId(context, valueOidCutOff, valueLocationId, controllerPalletId.text);
+                                    }
                                   }
                                 });
                               },

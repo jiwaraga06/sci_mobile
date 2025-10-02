@@ -28,7 +28,7 @@ class CustomField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 45,
+      height: messageError!.isEmpty? 45 : 60,
       child: TextFormField(
         onTap: onTap,
         controller: controller,

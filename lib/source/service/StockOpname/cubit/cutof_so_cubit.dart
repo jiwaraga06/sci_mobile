@@ -16,6 +16,7 @@ class CutofSoCubit extends Cubit<CutofSoState> {
   CutofSoCubit({this.repository}) : super(CutofSoInitial());
 
   void getCutOf(context) async {
+    EasyLoading.show();
     emit(CutofSoLoading());
     repository!.getCutOf(context).then((value) {
       var json = jsonDecode(value.body);

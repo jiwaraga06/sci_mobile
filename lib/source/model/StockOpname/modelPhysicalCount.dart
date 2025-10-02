@@ -67,13 +67,13 @@ class Datum {
         itemDescription1: json["item_description1"],
         itemDescription2: json["item_description2"],
         lotNo: json["lot_no"],
-        qtyPackageSizeSystem: json["qty_package_size_system"],
-        qtyPackagingPerPalletSystem: json["qty_packaging_per_pallet_system"],
-        qtyStockSystem: json["qty_stock_system"],
-        qtyPackageSizeCounted: json["qty_package_size_counted"],
-        qtyPackagingPerPalletCounted: json["qty_packaging_per_pallet_counted"],
-        qtyStockCounted: json["qty_stock_counted"],
-        qtyStandardZak: json["qty_standard_zak"],
+        qtyPackageSizeSystem: json["qty_package_size_system"] == null ? 0 : json["qty_package_size_system"],
+        qtyPackagingPerPalletSystem: json["qty_packaging_per_pallet_system"] == null ? 0 : json["qty_packaging_per_pallet_system"],
+        qtyStockSystem: json["qty_stock_system"] == null ? 0 : json["qty_stock_system"],
+        qtyPackageSizeCounted: json["qty_package_size_counted"] == null ? 0 : json["qty_package_size_counted"],
+        qtyPackagingPerPalletCounted: json["qty_packaging_per_pallet_counted"] == null ? 0 : json["qty_packaging_per_pallet_counted"],
+        qtyStockCounted: json["qty_stock_counted"] == null ? 0 : json["qty_stock_counted"],
+        qtyStandardZak: json["qty_standard_zak"] == null ? 0 : json["qty_standard_zak"],
     );
 
     Map<String, dynamic> toJson() => {
